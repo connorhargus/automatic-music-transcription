@@ -18,8 +18,8 @@ def main():
     audio_folder = 'audio_files'
     midi_folder = 'midi_files'
 
-    # Corpus files location
-    corpos_folder = 'midi_files/corpus'
+    # Subfolder in audio_folder to get wav files from, i.e. 'clean' or 'noise'
+    audio_source = 'noise'
 
     # Locations for input data to tdnn
     tdnn_feat_train = 'data/tdnn/mfcc_feat_train.pkl'
@@ -49,7 +49,7 @@ def main():
 
         print("\nSplitting data...\n")
 
-        wav_in = join(audio_folder, 'clean')
+        wav_in = join(audio_folder, audio_source)
         wav_out = audio_folder
         mid_in = join(midi_folder, 'all')
         mid_out = midi_folder

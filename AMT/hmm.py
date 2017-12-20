@@ -103,7 +103,7 @@ def hmm_predict(test_probs, target_notes, hmm_model, midi_file_name=None):
     pred_hidden = note_hmm.predict(X_test)
     print('\n')
 
-    # print(pred_hidden[3000:4000] - Y_test[3000:4000])
+    print("Evaluating model on test set...")
 
     # Simple prediction by maximum of probabilities
     max_prob_pred = np.argmax(X_test, axis=1)
