@@ -1,0 +1,91 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{A Neural Network for General Polyphonic AMT\\
+%{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
+%should not be used}
+%\thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+\author{\IEEEauthorblockN{Connor Hargus}
+\IEEEauthorblockA{\textit{UNI: cjh2209} \\
+\textit{Fundamentals of Speech Recognition - Beigi}\\
+}
+}
+
+\maketitle
+
+\section{Introduction}
+
+Automatic Music Transcription (AMT) is a theoretical system in which a computer recognizes the timing, pitch, and other relevant features of notes present in a musical recording to create a score. Many forms of music, including jazz, oral traditions, and  improvisation have never been transcribed to score. Students and practitioners of these forms of music who want to examine a work or play it themselves with a band, then, must typically perform the laborious task of listening and transcribing the music themselves. The driving force behind the development of AMT, then, has been to expedite this process. Ideally, an AMT system would automate additional aspects of musicological analysis including key changes, timing, style, and more \cite{benetos}. Beyond simplifying the transcription process, AMT could also open the door to communication between musician and computer during live performance, allowing a computer to provide a background rhythm section which responds to the soloist, for instance. In this research proposal, I will present the means by which I intend to replicate and expand on the current range of musical forms reliably transcribed by AMT systems.
+
+\section{State of the Art}
+
+There are a number of methods for AMT currently in use, most primarily suited for the transcription of a monophonic melody (single instrument playing a single note at any given time). Historically, the primary way of extracting pitch information from an audio signal was to analyze the recording in the frequency domain at various points in the recording and identify the fundamental frequency. This approach is indeed very useful in the monophonic case, and algorithms based on this idea have led to such reliable systems that monophonic AMT has been classified by most as "solved" \cite{benetos}. However, this approach typically fails when used for polyphonic AMT (tracking multiple parts of a musical piece at once). This is due to the fact that different instruments, and even notes from different ranges of the same instrument, often have different timbres. With multiple notes being capable of sounding at once in most forms of music, it becomes very difficult to identify what the fundamental frequencies of each pitch are compared with what are simply combinations of complex timbral frequencies.
+
+Existing methods for AMT often attempt to work around the complex combinations of timbres in polyphonic music by limiting their application to a certain instrument. This allows them to work within the confines of a relatively narrow set of timbral harmonics for each pitch and decompose the signal into an additive set of these timbres (see \cite{benetos2}, for instance, for an example using probabilitistic latent component analysis (PLCA)). However, this method of matching templates for particular instrument timbres is especially vulnerable to changes in instrument type and acoustic setting beyond those of the training set recordings used to generate the instrument templates. Many existing models also use the fact that musical notes and lines tend to follow rules not unlike linguistic ones in language. For instance, pitches between consecutive notes are highly correlated since musical lines tend not to jump octaves very often. In order to capture these time dependencies, many AMT systems use Hidden Markov Models to capture the underlying probabilities of notes and their transitions (\cite{sigtia}). Still, musically trained humans consistently outperform existing polyphonic AMT methods. Moreover, improvements in existing methods' transcription ability appears to be leveling out \cite{benetos} \cite{humphrey}. Existing methods are also very poor at detecting the nuances of musical expression, making a reliable and full conversion to score format a distant possibility. Human transcription, though painstaking and laborious, thus remains the standard by which by which polyphonic compositions are transferred from recording to paper for use by musicians and music theorists.
+
+In recent decades, speech recognition systems have benefited greatly from the use of temporal neural networks which classify phonemes. These supervised neural networks are capable of extracting high level features from the signal through a series of weighted layers of nodes which ultimately classify the probability of the presence of particular phonemes at a given time in a vocal recording \cite{waibel}. Given that music is in some sense a language of its own, it seems likely that similar principles might be applied to the problem of AMT. In 2012, Humphrey and Bello published a paper discussing the apparent stall in improvements to AMT systems in recent years, suggesting that a new approach to the problem would be required as opposed to tweaking the parameters of existing models \cite{humphrey}. Their contribution was a convolutional neural network used for chord identification which performed substantially better than past models. In February 2016, Sigtia, Benetos, and Dixon published a paper describing furthering the use of neural networks to the generalized problem of polyphonic AMT \cite{sigtia}. The authors utilized a dataset called MIDI Aligned Piano Sounds (MAPS), consisting of 65 hours of audio recordings of both monophonic and polyphonic piano. In addition to the recordings, the MIDI files used to generalize the recordings are also included. Musical Instrument Digital Interface (MIDI) is a file format describing a set of notes--which might be played by any instrument--with the relevant information of onset, offset, velocity (of attack), and pitch. In the case of MAPS, audio recordings were generated using a physical Disklavier piano which can play from MIDI files. Testing and training a recurrent neural net for polyphonic AMT on this dataset using grid search, Sigtia et al. in 2016 were able to achieve significant performance improvements over traditional AMT methods \cite{sigtia}.
+
+\section{My Approach}
+
+In this research project, I hope to apply the same principles to the problem of AMT as Sigta et al. by replacing the output phonemes with output pitches. My first goal will be to modify the TDNN provided in Kaldi's Tedlium example in order to replicate the results of Sigtia et al.  on monophonic and polyphonic piano recordings. This will involve combining the provided MIDI data on pitches, offsets and onsets to determine which Mel Frequency Cepstral Co-efficients generated from the recordings correspond with which pitches and combinations there-of. The output probabilities for the training data should therefore be trained to match 1 on those pitches which are present in the MIDI file and 0 for those pitches which are not. I will also need to apply post-processing to these probabilities to determine the points at which to choose the onset and offset of a note (see results charts of \cite{sigtia}, for instance). I have already been granted access to the MAPS database, and intend to begin by using the included piano recordings and associated MIDI files. Having gotten the model working for piano pitches, I intend to expand on these efforts by generating recordings from the sane MAPS MIDI files using another instrument. I now have Sibelius, and believe it is likely I can write a script to automate the MIDI to audio process to create recordings of an instrument with a a different timbre such as woodwind, bowed string, or plucked string. As a backup, there is also an open source command line program I can use called PySynth which will generate synth recordings from MIDI files automatically \cite{doege}. However, I suspect that the instrument sounds will not be as true to life as those generated by Sibelius and thus may damage my AMT systems ability to generalize to authentic live recordings. Either way, the progression of systems I intend to make as time allows is as follows:
+
+\begin{enumerate}
+\item Monophonic piano AMT
+\item Polyphonic piano AMT, comparing with Sigtia et al.
+\item Polyphonic AMT for another instrument (generate new recordings)
+\item Polyphonic AMT for both piano and other instrument (different instruments not playing simultaneously)
+\item Polyphonic AMT for both piano and other instrument (instruments playing simultaneously)
+\end{enumerate}
+
+One potential pitfall I foresee is the fact that the MAPS database incorporates polyphonic chord recordings of a piano. In order to do the same for multiple instruments, I suspect I may need to create all permutations of instruments playing the various parts and inversions of such chords. Beyond two voices, this would create a combinatorial increase in the number recordings I would need to generate, and would greatly increase the computational complexity necessary for training the model. Alternatively, it may be the case that monophonic or two-voice recordings will suffice for training, and the results will generalize to more complicated polyphonic cases so that the output probabilities of the TDNN will simply be close to 1 in two output pitches in the case of a two-instrument recording, for instance. I am not sure which will be the case, though I suspect that generalizations from training on one or two voices to complex polyphonic recordings will be lixable to far greater error \cite{benetos}. Comparing the results across these two different methods will be an interesting finding in itself.
+
+\section{Expectations}
+
+Using the MAPS MIDI dataset I find it likely that I can achieve monophonic and polyphonic automatic music transcription for piano (systems 1 and 2 from above) at accuracies comparable to modern AMT systems. There are various measures for the accuracy of such a system, though the standard I plan to compare to is the \textbf{F}-score, or $2\frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}$, which is based on whether given pitches are present or not when they should or should not be. I hope to train the polyphonic piano model and achieve \textbf{F}-score of above 0.5 for 2 or 3 voices. This is comparable to what the most sophisticated modern systems are able to achieve \cite{sigtia} with 5 voices, so my expectations are lower given that I have less time and computational power to do grid search on the number of nodes and arrangement of layers in the neural network.
+
+Assuming I will be able to generate the requisite multi-instrument audio files for two voices with different instruments and accuracy is not significantly reduced for systems 3 and 4 (see above list), I would next train the model on a duet with different instruments for system 5. Beyond this, if possible I hope to add a third or fourth instrumental voice and see how quickly the system's accuracy deteriorates. In the process of working on this project, I hope to learn about the training of time delay neural nets on temporal data in a task similar to that of speech recognition. In the process, I hope to gain a better understanding of the fundamental similarities and differences between training a neural net for phoneme recognition and training one for the language of music. By finding actual musical performance recordings and testing the performance of my model on such a case, I will grapple with the difficulties such an AMT system encounters in moving from clean MAPS training data to the real world. Observing the results on real recordings will allow me to draw conclusions about the necessary breadth of a training data set, and whether recordings from human musicians with associated MIDI tracks would be required for better accuracy. From this, I may be able to draw conclusions about what changes might improve the performance of such an AMT system, and what the limits might be for time delay neural networks in their suitability for this task.
+
+%------------------------------------------------
+
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+\bibitem{benetos}
+Benetos, E., Dixon, S., Giannoulis, D., Kirchhoff, H., \& Klapuri, A. (2013). Automatic music transcription: challenges and future directions. \textit{Journal of Intelligent Information Systems}, 41(3), 407-434.
+
+\bibitem{benetos2}
+Benetos, E., \& Dixon, S. (2012). A Shift-Invariant Latent Variable Model for Automatic Music Transcription. Computer Music Journal, 36(4), 81-94.
+
+\bibitem{doege}
+Doege, M. C. (2017, October 15). PySynth. Retrieved October 15, 2017, from https://github.com/mdoege/PySynth
+
+\bibitem{humphrey}
+Humphrey, E. J., \& Bello, J. P. (2012). Rethinking Automatic Chord Recognition with Convolutional Neural Networks. 2012 11th International Conference on Machine Learning and Applications. 
+
+\bibitem{sigtia}
+Sigtia, S., Benetos, E., \& Dixon, S. (2016). An End-to-End Neural Network for Polyphonic Piano Music Transcription. IEEE/ACM \textit{Transactions on Audio, Speech, and Language Processing}, 24(5), 927-939.
+
+\bibitem{waibel}
+Waibel, A., Hanazawa, T., Hinton, G., Shikano, K., \& Lang, K. J. (1990). Phoneme Recognition Using Time-Delay Neural Networks. Readings in Speech Recognition, 393-404.
+ 
+\end{thebibliography}
+
+
+
+\end{document}

@@ -1,0 +1,56 @@
+Connor Hargus
+Uni: cjh2209
+Fundamentals of Speech Recognition - Beigi
+
+Pre-Requisites:
+	- Python 2.7
+
+	Note: all of the following can be installed with a simple pip install command, except for
+	Python-Midi which requires cloning from https://github.com/vishnubob/python-midi.git, and
+	running python setup.py install
+	- scipy
+	- scikit-learn
+	- hmmlearn
+	- TensorFlow (GPU preferable, not essential)
+	- mido (Python library for handling midi files)
+	- Python-Midi (another Python library for handling midi files)
+	- python_speech_features (library for extracting MFCCs, as well as other speech features)
+
+
+How To Run:
+	- A simple command of "python run.py" from in this folder performs the whole process, from 
+		pre-processing, feature extraction, TDNN training, HMM training, through decoding.
+		Parameters at the top of main() in run.py (and in other scripts here) can be changed, for 
+		instance to use the noisy audio from audio_files/noise instead of clean, etc.
+	- Note that like in the Tedlium example, steps can be skipped by setting the stage variable 
+		near the top of the main() function in run.py.
+	- Please feel free to email me at cjh2209@columbia.edu if you have any questions at all!
+
+Project Structure:
+	- audio_files/ : Contains .wav files (already generated in my submission)
+		- clean/ : Contains all clean .wav files (no added noise)
+		- noise/ : Contains all .wav files with added noise
+		- train/ : Contains .wav files for training
+		- test/ : Contains .wav files for testing
+	- data/ : Input training and testing data for TDNN and HMM
+		- tdnn:/ Data in .pkl format for training/evaluation tdnn
+		- hmm/ : Data in .pkl format for training/evaluating hmm
+	- midi_files : Same structure as audio_files but for midi files (without noise folder)
+	- models/ : Saved copies of trained TDNN and HMM models, to speed up later decoding
+	- output_midi/ : Contains reconstructed midi files generated from TDNN and HMM
+
+	- generate_features.py : Generates MFCC features for all train and test audio files, stores 
+		them in data/ folder for TDNN training.
+	- generate_outputs.py : Reads MIDI files to create matrix of notes turned on at every MFCC 
+		frame, i.e. the expected output used in training the TDNN.
+	- get_num_mfccs.py : Due to slight inconsistencies in python_speech_features, this function 
+		standardizes the number of frames across outputs and features.
+	- hmm.py : Use maximum likelihood to estimate parameters of HMM with Gaussian emissions, use 
+		Viterbi algorithm to perform decoding on test data
+	- run.py : Main script which calls other functions to perform the whole training and decoding 
+		process from start to finish.
+	- split_data.py : Splits data into train and test sets, reserving larger pool of training set 
+		to act as the corpus for training the HMM.
+	- tdnn.py : Construct, train, and predict with a time-delay neural network constructed using 
+		Conv1D layers, max pooling, dropout, and final softmax layer
+	- write_midi_mono.py : Construct a midi file given a list of notes present in each frame
