@@ -17,9 +17,9 @@ import pickle
 tdnn_inputs = 30
 
 
-'''
+"""
 For each audio file use python_speech_features library to extract MFCCs and save them
-'''
+"""
 def generate_features(src_dir, out_file):
 
     num_files = len(listdir(src_dir)) - 1

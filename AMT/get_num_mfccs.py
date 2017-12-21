@@ -8,9 +8,9 @@ import wave
 import contextlib
 
 
-'''
+"""
 Use the sample rate of an audio file to predict the number of MFCCs which will be generated
-'''
+"""
 def get_num_mfccs(file):
     fname = join(file + ".wav")
     with contextlib.closing(wave.open(fname, 'r')) as f:

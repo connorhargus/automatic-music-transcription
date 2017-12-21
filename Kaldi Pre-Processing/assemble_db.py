@@ -2,19 +2,20 @@ import os
 from os import listdir
 from os.path import isfile, join
 
-import itertools
-
 import numpy as np
+np.random.seed(0)
 import shutil
 
-num_files = 1171
 
-np.random.seed(0)
+"""
+Takes midi and generated audio files and puts them in the db/ folder with
+the same structure as used in the Tedlium example, splitting the dataset into
+train, test, and dev sets in the process.
+"""
+def assemble_db(stm_dir, sph_dir, out_dir):
 
-def main(stm_dir, sph_dir, out_dir):
-
+    num_files = len(listdir(stm_dir))
     rand_perm = np.random.permutation(num_files + 1)
-    print(rand_perm)
 
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
@@ -27,8 +28,6 @@ def main(stm_dir, sph_dir, out_dir):
         os.makedirs(join(out_dir, 'LM'))
 
     for i, stm_file in enumerate(listdir(stm_dir)):
-
-        # print('i: ' + str(i))
 
         if stm_file == '.DS_Store':
             continue
@@ -52,5 +51,5 @@ if __name__ == '__main__':
     sph_dir = 'audio_files/audio_sph'
     out_dir = 'db/TEDLIUM_release2'
 
-    main(stm_dir, sph_dir, out_dir)
+    assemble_db(stm_dir, sph_dir, out_dir)
 

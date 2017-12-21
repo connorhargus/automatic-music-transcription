@@ -11,16 +11,18 @@ from mido import tick2second
 
 target_utt_length = 2
 
-def main(src_dir, out_dir):
+
+"""
+Construct .stm utterance files for input to Tedlium example. Here we string multiple
+notes into sentences to fit better with Kaldi's training process and the MFCC extraction.
+"""
+def make_stm(src_dir, out_dir):
 
     if not os.path.exists(out_dir):
         os.makedirs(join(out_dir))
 
     # For each midi file in the midi source directory, generate utterances by grouping notes
     for i, midi_file in enumerate(sorted(listdir(src_dir))):
-
-        # if i > 1:
-        #     return
 
         if midi_file == '.DS_Store':
             continue
@@ -29,9 +31,6 @@ def main(src_dir, out_dir):
 
         # Make MIDI ticks in absolute time instead of relative to previous note
         pattern.make_ticks_abs()
-
-        # print(len(pattern[0]))
-        # print(pattern)
 
         mid = MidiFile(join(src_dir, midi_file))
 
@@ -46,11 +45,8 @@ def main(src_dir, out_dir):
 
             # Use mido package to get time information
             for i, track in enumerate(mid.tracks):
-                # print('Track {}: {}'.format(i, track.name))
 
                 for msg in track:
-
-                    print(msg)
 
                     if msg.type == 'set_tempo':
                         tempo = msg.tempo
@@ -76,7 +72,6 @@ def main(src_dir, out_dir):
             for i in range(0, len(pattern[0])):
 
                 cur_string = str(pattern[0][i])
-                print(cur_string)
 
                 if 'NoteOn' in cur_string:
                     note_on = True
@@ -97,8 +92,6 @@ def main(src_dir, out_dir):
                     tick_end = cur_string.find(end, tick_begin)
                     tick_string = cur_string[tick_begin:tick_end]
 
-                    # print('tick_string: ' + str(tick_string))
-
                 except ValueError:
                     print('Could not find \"tick=\"')
 
@@ -118,7 +111,6 @@ def main(src_dir, out_dir):
                 # Convert ticks to absolute time using mido library
                 ticks = float(tick_string)
                 seconds = tick2second(ticks, mid.ticks_per_beat, tempo)
-                # print('seconds: ' + str(seconds))
 
                 # Int representing note pitch
                 note = int(note_string)
@@ -166,7 +158,6 @@ def main(src_dir, out_dir):
                     if len(line.split()) <= 4:
                         continue
 
-                    print(line)
                     if float(line.split()[3]) < float(line.split()[4]) - 1:
 
                         tmp_stm_file.write(line)
@@ -179,5 +170,5 @@ if __name__ == '__main__':
     src_dir = 'midi_files'
     out_dir = 'stm_files'
 
-    main(src_dir, out_dir)
+    make_stm(src_dir, out_dir)
 

@@ -25,10 +25,10 @@ max_song_len = 5000
 tdnn_inputs = 30
 
 
-'''
+"""
 Read supplied midi files to extract information on which pitches are turned on at each MFCC sample point
 in a recording. An extra dimension is added representing the presence of silence.
-'''
+"""
 def generate_outputs(src_dir, src_audio_dir, out_file):
 
     num_files = len(listdir(src_dir)) - 1
@@ -125,10 +125,10 @@ def generate_outputs(src_dir, src_audio_dir, out_file):
     pickle.dump(output_vals, open(out_file, 'wb'))
 
 
-'''
+"""
 For a given midi file "note on" line, determine the start time and pitch value of
 the note.
-'''
+"""
 def get_note(cur_string, ticks_per_beat, tempo):
     tick_string = ''
     note_string = ''

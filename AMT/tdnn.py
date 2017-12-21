@@ -18,11 +18,11 @@ NUM_MFCC = 30
 NUM_CEPS = 13
 
 
-'''
+"""
 Train a time-delay neural network (implemented with Keras convolutional layers)
 to predict the probability of a given note's presence at particular time frames
 based on surrounding MFCCs
-'''
+"""
 def tdnn_train(tdnn_feat_train, tdnn_target_train, model_name):
 
     X_train = pickle.load(open(tdnn_feat_train, 'rb'))
@@ -63,10 +63,10 @@ def tdnn_train(tdnn_feat_train, tdnn_target_train, model_name):
     model.save(model_name)
 
 
-'''
+"""
 Use trained TDNN to predict probabilities of each note's presence for each time 
 frame given the surrounding MFCCs
-'''
+"""
 def tdnn_predict(model_name, tdnn_feat_train, tdnn_target_train, tdnn_feat_test, tdnn_target_test, midi_file_name=None):
 
     X_train = pickle.load(open(tdnn_feat_train, 'rb'))
@@ -99,12 +99,12 @@ def tdnn_predict(model_name, tdnn_feat_train, tdnn_target_train, tdnn_feat_test,
     pickle.dump(test_act_notes, open("data/hmm/test_notes.pkl", 'wb'))
 
 
-'''
+"""
 Returns an untrained time-delay neural network model in Keras using 
 one-dimensional convolutional layers across the time axis. Note 
 this model is adapted from an image traffic sign recognition convolutional 
 neural net at https://chsasank.github.io/keras-tutorial.html
-'''
+"""
 def tdnn_model():
 
     model = Sequential()

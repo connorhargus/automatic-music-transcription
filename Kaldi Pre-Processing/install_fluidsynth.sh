@@ -1,3 +1,6 @@
+# This script was provided by FluidSynth, it will install FluidSynth but you will
+# have to download a soundfont to actually generate audio using FluidSynth
+
 # Install FluidSynth MIDI synthesizer which is available for non-realtime batch
 # synthesis and some sound fonts.
 # This script works on OSX with homebrew.

@@ -9,9 +9,9 @@ from hmm import hmm_train
 from hmm import hmm_predict
 
 
-'''
+"""
 Main script recipe to process data, train neural net, train HMM, and decode test data
-'''
+"""
 def main():
 
     # Locations for audio and midi source files (train and test are subfolders)

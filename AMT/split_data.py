@@ -6,9 +6,9 @@ import shutil
 import numpy as np
 np.random.seed(7)
 
-'''
+"""
 Script to split audio (.wav) and midi files into training and test sets
-'''
+"""
 def split_data(wav_in, wav_out, mid_in, mid_out):
 
     # Create new train and test folders for audio and midi files

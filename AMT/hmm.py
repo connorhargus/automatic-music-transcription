@@ -10,11 +10,11 @@ from write_midi_mono import write_midi_mono
 NUM_NOTES = 89 # 88 + 1 for silence
 
 
-'''
+"""
 Train a hidden markov model in hmmlearn to capture transitions between notes 
 from frame to frame. Training is performed using maximum likelihood estimate since
 hidden states (notes) are observed in the training data.
-'''
+"""
 def hmm_train(tdnn_probs_train, target_notes_train, target_corpus, notes_train, output_model_file):
 
     X_train = pickle.load(open(tdnn_probs_train, 'rb'))
@@ -88,11 +88,11 @@ def hmm_train(tdnn_probs_train, target_notes_train, target_corpus, notes_train, 
     pickle.dump(note_hmm, open(output_model_file, 'wb'))
 
 
-'''
+"""
 Use trained hidden markov model to predict the sequence of notes which
 generate the output probabilities in the TDNN. We perform this
 decoding using the Viterbi algorithm.
-'''
+"""
 def hmm_predict(test_probs, target_notes, hmm_model, midi_file_name=None):
 
     X_test = pickle.load(open(test_probs, 'rb'))
@@ -120,9 +120,9 @@ def hmm_predict(test_probs, target_notes, hmm_model, midi_file_name=None):
         write_midi_mono(pred_hidden, midi_file_name)
 
 
-'''
+"""
 Compare two arrays of predicted notes, printing the percent accuracy
-'''
+"""
 def compute_frame_accuracy(actual, pred, model_name):
     matches = 0
     for i in range(len(pred)):
@@ -132,10 +132,10 @@ def compute_frame_accuracy(actual, pred, model_name):
     print('Accuracy on ' + model_name + ': ' + str(float(matches) / len(pred)))
 
 
-'''
+"""
 Calculates the word error rate (WER) for given lists of notes. Note: adapted 
 from a tutorial on WER at https://martin-thoma.com/word-error-rate-calculation/
-'''
+"""
 def compute_wer(actual, pred, model_name):
 
     # Convert frame-by-frame listing of notes to an order listing of notes as words
